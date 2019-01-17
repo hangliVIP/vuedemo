@@ -24,7 +24,7 @@
       </div>
 
       <div class="ck-row">
-        <div class="ckbox_wrap" @click="remember=!remember" :class="{active:remember}">
+        <div class="ckbox_wrap" @click="rememberSet" :class="{active:remember}">
         <i class="iconfont" :class="{'icon-kongjianyixuan':remember,'icon-kongjianweixuan':!remember}"></i>
         <span>记住密码</span>
 
@@ -63,7 +63,12 @@
       autoLoginSet(){
         // 设置当前的autologin为true 或 false
         this.autologin =! this.autologin;
-        this.autologin && (this.remember);  // 自动登录的时候肯定也记住密码了
+        // 自动登录的时候肯定也记住密码了
+        this.autologin && (this.remember=true);
+      },
+      rememberSet(){  // 记住密码，同时勾选自动登录
+        this.remember = !this.remember;
+        this.remember || (this.autologin=false);
       }
     }
   }
@@ -149,10 +154,16 @@
         .ckbox_wrap{
           padding-left:36px;
          i::before{
+           padding-top: 10px;
            display: inline-block;
            height: 24px;
            width: 24px;
+           font-size: 30px;
          }
+        }
+
+        .ckbox_wrap.active{
+          color: #55a532;
         }
 
 
