@@ -1,0 +1,32 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="kongjianweixuan" unicode="&#60400;" d="M896 832H128c-35.296 0-64-28.704-64-64v-768c0-35.296 28.704-64 64-64h768c35.296 0 64 28.704 64 64V768c0 35.296-28.704 64-64 64zM128 0V768h768l0.064-768H128z"  horiz-adv-x="1024" />
+
+    
+    <glyph glyph-name="kongjianyixuan" unicode="&#60401;" d="M896 832H128c-35.296 0-64-28.704-64-64v-768c0-35.296 28.704-64 64-64h768c35.296 0 64 28.704 64 64V768c0 35.296-28.704 64-64 64zM128 0V768h768l0.064-768H128zM744.64 587.968l-310.368-331.296-157.696 132.48a32 32 0 0 1-41.184-49.024l180.896-152a32 32 0 0 1 43.936 2.624L791.36 544.224a32 32 0 1 1-46.72 43.744z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>
