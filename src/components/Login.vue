@@ -23,10 +23,10 @@
                v-model="PNO">
       </div>
 
-      <div class="input-group" :class="{active:act_index===3,error:errors.has(password)}">
+      <div class="input-group" :class="{active:act_index===3,error:errors.has(Password)}">
         <label for="Password">用户密码:</label>
         <!--focus获得焦点-->
-        <input name="password" @focus="act_index=3" type="password" id="Password" v-model="Password">
+        <input name="Password" @focus="act_index=3" type="Password" id="Password" v-model="Password">
       </div>
 
       <div class="ck-row">
@@ -61,14 +61,24 @@
         act_index: 1,
         cm_code: "",
         PNO: "",
-        password: "",
+        Password: "",
         remember: false,
         autologin: false
       };
     },
 
     mounted() {
+      // let data = JSON.parse(localStorage.getItem("Login_data"));
+      // this.cm_code = data.CNO;
+      // this.Password = data.Password;
+      // this.PNO = data.PNO;
+      // this.autologin = data.autologin;
+      // this.remember = data.remember;
       this.$validator.validate();  // 强制进行校验
+
+      if (this.autologin){
+        this.loginBtnClick();
+      }
     },
 
     methods: {
@@ -93,6 +103,10 @@
         setTimeout(() => {
           Indicator.close();
         }, 2000);  // 2s后关闭
+
+        console.log(111, this, this.$router.push)
+        this.$router.push("/Home");
+
         // 发送ajax请求
         /**
          * 第一个是请求的接口地址
@@ -118,7 +132,7 @@
                 })
               );
 
-              this.$route.push("/home");
+              this.$router.push("/Home");
 
             } else {  // 登录失败
               Toast({
