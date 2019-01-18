@@ -13,12 +13,14 @@
       <div class="input-group" :class="{active:act_index===1,error:errors.has('cno')}">
         <label for="cm_code">公司编号:</label>
         <!--v-validate 加入验证方法 -->
-        <input name="cno" v-validate="{required:true,max:8,min:4}" @focus="act_index=1" type="number" id="cm_code" v-model="cm_code">
+        <input name="cno" v-validate="{required:true,max:8,min:4}" @focus="act_index=1" type="number" id="cm_code"
+               v-model="cm_code">
       </div>
 
       <div class="input-group" :class="{active:act_index===2,error:errors.has('pno')}">
         <label for="PNO">员工编号:</label>
-        <input name="pno"v-validate="{required:true,max:12,min:6}" @focus="act_index=2" type="PNO" id="PNO" v-model="PNO">
+        <input name="pno" v-validate="{required:true,max:12,min:6}" @focus="act_index=2" type="PNO" id="PNO"
+               v-model="PNO">
       </div>
 
       <div class="input-group" :class="{active:act_index===3,error:errors.has(password)}">
@@ -29,9 +31,9 @@
 
       <div class="ck-row">
         <div class="ckbox_wrap" @click="rememberSet" :class="{active:remember}">
-        <i class="iconfont" :class="{'icon-kongjianyixuan':remember,'icon-kongjianweixuan':!remember}"></i>
-        <span>记住密码</span>
-      </div>
+          <i class="iconfont" :class="{'icon-kongjianyixuan':remember,'icon-kongjianweixuan':!remember}"></i>
+          <span>记住密码</span>
+        </div>
         <div @click="autoLoginSet" class="ckbox_wrap" :class="{active:autologin}">
           <i class="iconfont" :class="{'icon-kongjianyixuan':autologin,'icon-kongjianweixuan':!autologin}"></i>
           <span>自动登录</span>
@@ -50,7 +52,8 @@
 
 
 <script>
-
+  import {Indicator} from 'mint-ui';
+  import axios from "axios"  // 引入axios网络请求库
   export default {
     name: "Login",
     data() {
@@ -58,32 +61,80 @@
         act_index: 1,
         cm_code: "",
         PNO: "",
-        Password: "",
-        remember:false,
-        autologin:false
+        password: "",
+        remember: false,
+        autologin: false
       };
     },
-    methods:{
-      autoLoginSet(){
+
+    mounted() {
+      this.$validator.validate();  // 强制进行校验
+    },
+
+    methods: {
+      autoLoginSet() {
         // 设置当前的autologin为true 或 false
-        this.autologin =! this.autologin;
+        this.autologin = !this.autologin;
         // 自动登录的时候肯定也记住密码了
-        this.autologin && (this.remember=true);
+        this.autologin && (this.remember = true);
       },
-      rememberSet(){  // 记住密码
+      rememberSet() {  // 记住密码
         this.remember = !this.remember;
-        this.remember || (this.autologin=false);
+        this.remember || (this.autologin = false);
       },
-      loginBtnClick(){
+      loginBtnClick() {
         // this.errors.any();  any可以返回一个boolean值
-        if(this.errors.any()){
+        if (this.errors.any()) {
           console.log("有错误")
           return;
         }
+        // 弹窗
+        Indicator.open("正在登录...");
+        setTimeout(() => {
+          Indicator.close();
+        }, 2000);  // 2s后关闭
         // 发送ajax请求
+        /**
+         * 第一个是请求的接口地址
+         * 第二个是请求的参数
+         * 第三个是返回值
+         */
+        axios.post("http://127.0.0.1/api/login", {
+          PNO: this.PNO,
+          Password: this.password,
+          CNO:this.cm_code
+        })
+          .then(res => {
+            if (res.data.code === 1) {
+              // 登录成功
+              // 记住用户名密码
+              localStorage.setItem(
+                "Login_data", JSON.stringify({   // key value
+                  remember: this.remember,
+                  autologin: this.autologin,
+                  CNO: this.remember ? this.cm_code : "",
+                  Password: this.remember ? this.Password : "",
+                  PNO: this.remember ? this.PNO : "",
+                })
+              );
 
+              this.$route.push("/home");
 
-
+            } else {  // 登录失败
+              Toast({
+                message: "登录异常失败！",
+                duration: 2000
+              });
+            }
+            Indicator.close();
+          })
+          .catch(e => {
+            Toast({
+              message: "登录异常失败！",
+              duration: 2000
+            });
+            Indicator.close();
+          })
       }
     }
   }
@@ -91,7 +142,7 @@
 
 <style lang="scss" scoped>
 
-  @mixin login_wrap{
+  @mixin login_wrap {
     width: 600px;
     height: 836px;
     border-radius: 20px;
@@ -159,6 +210,7 @@
         color: #10903d;
         border: 2px solid #10803d;
       }
+
       // 设置输入验证
       .input-group.error {
         color: red;
@@ -172,18 +224,19 @@
         display: flex;
         justify-content: space-around;
         // 未点击时的控件
-        .ckbox_wrap{
-          padding-left:36px;
-         i::before{
-           padding-top: 10px;
-           display: inline-block;
-           height: 24px;
-           width: 24px;
-           font-size: 30px;
-         }
+        .ckbox_wrap {
+          padding-left: 36px;
+
+          i::before {
+            padding-top: 10px;
+            display: inline-block;
+            height: 24px;
+            width: 24px;
+            font-size: 30px;
+          }
         }
 
-        .ckbox_wrap.active{
+        .ckbox_wrap.active {
           color: #55a532;
         }
 
@@ -202,13 +255,13 @@
 
     }
 
-    .btn-wrap{
+    .btn-wrap {
       @include login_wrap;
-      letter-spacing: 10px;  // 间隔
-      font-weight: 700;      // 加粗
+      letter-spacing: 10px; // 间隔
+      font-weight: 700; // 加粗
       text-align: center;
       line-height: 100px;
-      height:100px;
+      height: 100px;
       font-size: 30px;
       color: #0086b3;
     }
