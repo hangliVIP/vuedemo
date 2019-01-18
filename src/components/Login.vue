@@ -9,36 +9,40 @@
       </div>
 
       <!--登录表达-->
-      <div class="input-group" :class="{active:act_index===1}">
+      <!--errors.has('cno') 加入判断，看是否满足检验规则 -->
+      <div class="input-group" :class="{active:act_index===1,error:errors.has('cno')}">
         <label for="cm_code">公司编号:</label>
-        <input @focus="act_index=1" type="number" id="cm_code" v-model="cm_code">
+        <!--v-validate 加入验证方法 -->
+        <input name="cno" v-validate="{required:true,max:8,min:4}" @focus="act_index=1" type="number" id="cm_code" v-model="cm_code">
       </div>
-      <div class="input-group" :class="{active:act_index===2}">
+
+      <div class="input-group" :class="{active:act_index===2,error:errors.has('pno')}">
         <label for="PNO">员工编号:</label>
-        <input @focus="act_index=2" type="PNO" id="PNO" v-model="PNO">
+        <input name="pno"v-validate="{required:true,max:12,min:6}" @focus="act_index=2" type="PNO" id="PNO" v-model="PNO">
       </div>
-      <div class="input-group" :class="{active:act_index===3}">
+
+      <div class="input-group" :class="{active:act_index===3,error:errors.has(password)}">
         <label for="Password">用户密码:</label>
         <!--focus获得焦点-->
-        <input @focus="act_index=3" type="password" id="Password" v-model="Password">
+        <input name="password" @focus="act_index=3" type="password" id="Password" v-model="Password">
       </div>
 
       <div class="ck-row">
         <div class="ckbox_wrap" @click="rememberSet" :class="{active:remember}">
         <i class="iconfont" :class="{'icon-kongjianyixuan':remember,'icon-kongjianweixuan':!remember}"></i>
         <span>记住密码</span>
-
       </div>
-
         <div @click="autoLoginSet" class="ckbox_wrap" :class="{active:autologin}">
           <i class="iconfont" :class="{'icon-kongjianyixuan':autologin,'icon-kongjianweixuan':!autologin}"></i>
           <span>自动登录</span>
         </div>
+      </div>
 
+      <div class="btn-wrap" @click="loginBtnClick">
+        <P>登录</P>
       </div>
 
     </div>
-
 
   </div>
 
@@ -66,9 +70,20 @@
         // 自动登录的时候肯定也记住密码了
         this.autologin && (this.remember=true);
       },
-      rememberSet(){  // 记住密码，同时勾选自动登录
+      rememberSet(){  // 记住密码
         this.remember = !this.remember;
         this.remember || (this.autologin=false);
+      },
+      loginBtnClick(){
+        // this.errors.any();  any可以返回一个boolean值
+        if(this.errors.any()){
+          console.log("有错误")
+          return;
+        }
+        // 发送ajax请求
+
+
+
       }
     }
   }
@@ -76,32 +91,32 @@
 
 <style lang="scss" scoped>
 
-  // 给h1 设置布局
-  h1 {
-    text-align: center; // 居中对齐
-    font-size: px2rem(36);
-    /*height: px2rem(36);*/
-    /*line-height: px2rem(36);*/
-    padding-top: 48px;
-    margin-bottom: 48px;
-    height: 36px;
-    line-height: 36px;
-    color: white;
+  @mixin login_wrap{
+    width: 600px;
+    height: 836px;
+    border-radius: 20px;
+    background-color: white;
+    margin: 0 auto;
   }
 
   .login {
-    background-color: #2ade69;
+    // 给h1 设置布局
+    h1 {
+      text-align: center; // 居中对齐
+      font-size: px2rem(36);
+      /*height: px2rem(36);*/
+      /*line-height: px2rem(36);*/
+      margin-bottom: 48px;
+      height: 36px;
+      line-height: 36px;
+      color: white;
+    }
 
     .login-box {
       /*width: px2rem(600);*/
       /*height: px2rem(836);*/
       /*border-radius: px2rem(20);*/
-
-      width: 600px;
-      height: 836px;
-      border-radius: 20px;
-      background-color: white;
-      margin: 0 auto;
+      @include login_wrap; //绑定风格
 
       .logo-wrap {
         padding: 80px 0px;
@@ -144,6 +159,12 @@
         color: #10903d;
         border: 2px solid #10803d;
       }
+      // 设置输入验证
+      .input-group.error {
+        color: red;
+        border: 2px solid red;
+      }
+
 
       .ck-row {
         @include rowstyle();
@@ -166,12 +187,8 @@
           color: #55a532;
         }
 
-
-
       }
-
     }
-
 
     .top_hat {
       /*width: px2rem(537);*/
@@ -184,6 +201,17 @@
       margin: 0 auto;
 
     }
+
+    .btn-wrap{
+      @include login_wrap;
+      letter-spacing: 10px;  // 间隔
+      font-weight: 700;      // 加粗
+      text-align: center;
+      line-height: 100px;
+      height:100px;
+      font-size: 30px;
+      color: #0086b3;
+    }
   }
 
 </style>
@@ -194,5 +222,6 @@
   body,
   #app {
     height: 100%;
+    background-color: #2ade69;
   }
 </style>
