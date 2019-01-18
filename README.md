@@ -1,3 +1,7 @@
+实现登录功能，监听验证功能
+使用了vee-validate用于验证功能，引入了iconfont作为控件。引入方法：https://mp.csdn.net/postedit/86524748
+
+
 # vuedemo
 
 > A Vue.js project
@@ -28,3 +32,5 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
