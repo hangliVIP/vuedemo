@@ -54,6 +54,7 @@
 <script>
   import {Indicator} from 'mint-ui';
   import axios from "axios"  // 引入axios网络请求库
+
   export default {
     name: "Login",
     data() {
@@ -68,13 +69,16 @@
     },
 
     mounted() {
-      // let data = JSON.parse(localStorage.getItem("Login_data"));
-      // this.cm_code = data.CNO;
-      // this.Password = data.Password;
-      // this.PNO = data.PNO;
-      // this.autologin = data.autologin;
-      // this.remember = data.remember;
+      let data = JSON.parse(localStorage.getItem("Login_data"));
+      if (data){
+        this.cm_code = data.CNO;
+        this.password = data.Password;
+        this.PNO = data.PNO;
+        this.autologin = data.autologin;
+        this.remember = data.remember;
+      }
       this.$validator.validate();  // 强制进行校验
+
 
       if (this.autologin){
         this.loginBtnClick();
@@ -104,7 +108,6 @@
           Indicator.close();
         }, 2000);  // 2s后关闭
 
-        console.log(111, this, this.$router.push)
         this.$router.push("/Home");
 
         // 发送ajax请求
@@ -131,6 +134,12 @@
                   PNO: this.remember ? this.PNO : "",
                 })
               );
+
+              // sessionStorage 用于保存用户信息
+              sessionStorage.setItem("LoginUser",JSON.stringify(res.data.user));
+
+              // 把当前登录的用户信息放到vuex
+              this.$store.commit('inituser',res.data.user);
 
               this.$router.push("/Home");
 
