@@ -52,6 +52,7 @@
 
 
 <script>
+  // import {mapMutations} from "Vuex";
   import {Indicator} from 'mint-ui';
   import axios from "axios"  // 引入axios网络请求库
 
@@ -70,7 +71,7 @@
 
     mounted() {
       let data = JSON.parse(localStorage.getItem("Login_data"));
-      if (data){
+      if (data) {
         this.cm_code = data.CNO;
         this.password = data.Password;
         this.PNO = data.PNO;
@@ -80,7 +81,7 @@
       this.$validator.validate();  // 强制进行校验
 
 
-      if (this.autologin){
+      if (this.autologin) {
         this.loginBtnClick();
       }
     },
@@ -119,7 +120,7 @@
         axios.post("http://127.0.0.1/api/login", {
           PNO: this.PNO,
           Password: this.password,
-          CNO:this.cm_code
+          CNO: this.cm_code
         })
           .then(res => {
             if (res.data.code === 1) {
@@ -136,10 +137,10 @@
               );
 
               // sessionStorage 用于保存用户信息
-              sessionStorage.setItem("LoginUser",JSON.stringify(res.data.user));
+              sessionStorage.setItem("LoginUser", JSON.stringify(res.data.user));
 
               // 把当前登录的用户信息放到vuex
-              this.$store.commit('inituser',res.data.user);
+              this.$store.commit('inituser', res.data.user);
 
               this.$router.push("/Home");
 
